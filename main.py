@@ -16,7 +16,7 @@ class RssNewsPlugin(Star):
         soup = BeautifulSoup(html_str, "html.parser")
         return soup.get_text(separator=" ", strip=True)
 
-    @filter.llm_tool(name="get_news_from_rss")
+    @filter.llm_tool(name="self.get_news_from_rss")
     async def get_news_from_rss(self,_url:str="https://www.ithome.com/rss",_count:int=30):
         '''获取rss订阅新闻
         
