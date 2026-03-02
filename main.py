@@ -4,8 +4,7 @@ from astrbot.api import logger
 from astrbot.core.utils.astrbot_path import get_astrbot_data_path
 import httpx
 
-plugin_data_path = get_astrbot_data_path() / "plugin_data" / self.name # self.name 为插件名称，在 v4.9.2 及以上版本可用，低于此版本请自行指定插件名称
-
+plugin_data_path = get_astrbot_data_path() / "plugin_data" / self.name 
 @register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
