@@ -6,7 +6,7 @@ import httpx
 import atoma
 from bs4 import BeautifulSoup
 @register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
-class MyPlugin(Star):
+class RssNewsPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
 
