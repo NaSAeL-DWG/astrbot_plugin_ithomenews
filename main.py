@@ -1,24 +1,43 @@
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
+from astrbot.core.utils.astrbot_path import get_astrbot_data_path
+import httpx
 
-@register("helloworld", "YourName", "一个简单的 Hello World 插件", "1.0.0")
+plugin_data_path = get_astrbot_data_path() / "plugin_data" / self.name # self.name 为插件名称，在 v4.9.2 及以上版本可用，低于此版本请自行指定插件名称
+
+@register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
+        self.context.add_llm_tools(get_news_from_rss())
 
-    async def initialize(self):
-        """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
+    async def get_pure_text(html_str):
+        if not html_str:
+            return ""
+        soup = BeautifulSoup(html_str, "html.parser")
+        return soup.get_text(separator=" ", strip=True)
 
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("helloworld")
-    async def helloworld(self, event: AstrMessageEvent):
-        """这是一个 hello world 指令""" # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        user_name = event.get_sender_name()
-        message_str = event.message_str # 用户发的纯文本消息字符串
-        message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
-        logger.info(message_chain)
-        yield event.plain_result(f"Hello, {user_name}, 你发了 {message_str}!") # 发送一条纯文本消息
+    @filter.llm_tool(name="get_news_from_rss")
+    async def get_news_from_rss(self,_url:str="https://www.ithome.com/rss",_count:int=30):
+        '''获取rss订阅新闻
+        
+        Args:
+            _url (string): rss订阅地址
+            _count (number): 发送给模型的新闻数量
+        '''
+        try:
+            with httpx.Client() as client:
+                _response = client.get(_url)
+            feed = atoma.parse_rss_bytes(_response.content)
+            _news= ""
+            for item in feed.items[:_count]: 
+                _news += f"标题: {item.title}\n"
+                raw_html = item.description
+                pure_text = await get_pure_text(raw_html)
+                _news += f"正文摘要: {pure_text}\n"
+           
 
-    async def terminate(self):
-        """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+        except Exception as e:
+            print(f"发生错误: {e}")
+        return _news
