@@ -3,11 +3,12 @@ from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 from astrbot.core.utils.astrbot_path import get_astrbot_data_path
 import httpx
+import atoma
+from bs4 import BeautifulSoup
 @register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
-        self.context.add_llm_tools(get_news_from_rss())
 
     async def get_pure_text(html_str):
         if not html_str:
@@ -31,7 +32,7 @@ class MyPlugin(Star):
             for item in feed.items[:_count]: 
                 _news += f"标题: {item.title}\n"
                 raw_html = item.description
-                pure_text = await get_pure_text(raw_html)
+                pure_text = await self.get_pure_text(raw_html)
                 _news += f"正文摘要: {pure_text}\n"
            
 
