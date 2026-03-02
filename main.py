@@ -2,7 +2,7 @@ from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 from astrbot.core.utils.astrbot_path import get_astrbot_data_path
-import httpxs
+import httpx
 @register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
