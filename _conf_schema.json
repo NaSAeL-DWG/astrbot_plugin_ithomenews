@@ -1,0 +1,12 @@
+{
+    "url": {
+        "type": "string",
+        "description": "RSS订阅地址",
+        "default": "https://www.ithome.com/rss"
+    },
+    "count": {
+        "type": "int",
+        "description": "发送给模型的新闻数量",
+        "default": 30
+    }
+}

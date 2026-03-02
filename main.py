@@ -4,12 +4,15 @@ from astrbot.api import logger
 from astrbot.core.utils.astrbot_path import get_astrbot_data_path
 import httpx
 import atoma
+from astrbot.api import AstrBotConfig
 from bs4 import BeautifulSoup
 
 @register("rssnews", "NaSAeL", "获取rss订阅新闻", "1.0.0")
 class RssNewsPlugin(Star):
-    def __init__(self, context: Context):
+    def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
+        self._url = config['url']
+        self._count = config['count']
 
     async def get_pure_text(self,html_str):
         if not html_str:
@@ -18,11 +21,11 @@ class RssNewsPlugin(Star):
         return soup.get_text(separator=" ", strip=True)
 
     async def get_news_from_rsss(self,_url:str,_num:int):
+        _news = ""
         try:
             with httpx.Client() as client:
                 _response = client.get(_url)
             feed = atoma.parse_rss_bytes(_response.content)
-            _news= ""
             for item in feed.items[:_num]: 
                 _news += f"标题: {item.title}\n"
                 raw_html = item.description
@@ -35,12 +38,8 @@ class RssNewsPlugin(Star):
         return _news
 
     @filter.llm_tool()
-    async def get_news(self,_url:str="https://www.ithome.com/rss",_count:int=30):
+    async def get_news(self, event: AstrMessageEvent):
         '''获取rss订阅新闻
-        
-        Args:
-            _url (string): rss订阅地址
-            _count (number): 发送给模型的新闻数量
         '''
-        return await self.get_news_from_rsss(_url,_count)
+        return await self.get_news_from_rsss(self._url,self._count)
         
