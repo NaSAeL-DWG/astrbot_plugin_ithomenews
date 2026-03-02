@@ -10,7 +10,7 @@ class MyPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
 
-    async def get_pure_text(html_str):
+    async def get_pure_text(self,html_str):
         if not html_str:
             return ""
         soup = BeautifulSoup(html_str, "html.parser")
