@@ -34,7 +34,7 @@ class RssNewsPlugin(Star):
             print(f"发生错误: {e}")
         return _news
 
-    @filter.llm_tool(name="get_news_from_rss")
+    @filter.llm_tool()
     async def get_news(self,_url:str="https://www.ithome.com/rss",_count:int=30):
         '''获取rss订阅新闻
         
