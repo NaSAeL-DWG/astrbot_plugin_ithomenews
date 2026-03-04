@@ -8,5 +8,56 @@
         "type": "int",
         "description": "发送给模型的新闻数量",
         "default": 30
+    },
+    "test1": {
+        "type": "object",
+        "description": "测试object",
+        "default": "test",
+        "items": {
+            "name": {
+                "type": "string",
+                "description": "测试111",
+                "default": "test"
+            },
+            "age": {
+                "type": "int",
+                "description": "测试222",
+                "default": 18
+            }
+        }
+    },
+    "test2": {
+        "type": "list",
+        "description": "测试list",
+        "default": "test",
+        "items": {
+            "name": {
+                "type": "string",
+                "description": "测试111",
+                "default": "test"
+            },
+            "age": {
+                "type": "int",
+                "description": "测试222",
+                "default": 18
+            }
+        }
+    },
+    "test3": {
+        "type": "dict",
+        "description": "测试dict",
+        "default": "test",
+        "items": {
+            "name": {
+                "type": "string",
+                "description": "测试111",
+                "default": "test"
+            },
+            "age": {
+                "type": "int",
+                "description": "测试222",
+                "default": 18
+            }
+        }
     }
 }
